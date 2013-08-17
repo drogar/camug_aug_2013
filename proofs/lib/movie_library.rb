@@ -215,7 +215,7 @@ heading 'General Movie Functionality' do
 
         results = sut.all.sort_using(comparer)
 
-        results.prove { eql? [theres_something_about_mary, your_mine_and_ours, shrek, pirates_of_the_carribean, 
+        results.prove { eql? [your_mine_and_ours, theres_something_about_mary, shrek, pirates_of_the_carribean, 
             indiana_jones_and_the_temple_of_doom, cars, a_bugs_life] }
       end
 
@@ -224,10 +224,10 @@ heading 'General Movie Functionality' do
         comparer = Compare.by.key(:title)
 
         results = sut.all.sort_using(comparer)
-
+       # results.each {|m| puts m.title; puts ', '}
 
         results.prove { eql? [a_bugs_life, cars, indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean, shrek, 
-          your_mine_and_ours, theres_something_about_mary] }
+          theres_something_about_mary, your_mine_and_ours] }
       end
 
       proof 'Sorts all movies by descending release date' do
@@ -241,7 +241,21 @@ heading 'General Movie Functionality' do
 
       proof 'Sorts all movies by ascending release date' do
         sut, movie_list = build.library(original_movies)
-        comparer = Compare.by_descending.key(:release_date)
+        comparer = Compare.by.key(:release_date)
+
+        results = sut.all().sort_using(comparer)
+        #results = sut.sort_all_movies_by_release_date_ascending
+
+        results.prove { eql? [indiana_jones_and_the_temple_of_doom, a_bugs_life, pirates_of_the_carribean, cars, 
+          your_mine_and_ours, shrek, theres_something_about_mary] }
+      end
+      
+
+      proof 'Sorts all movies by ascending release date as map' do
+        sut, movie_list = build.library(original_movies)
+        comparer = Compare.by.map do |movie| 
+          movie.release_date
+        end
 
         results = sut.all().sort_using(comparer)
         #results = sut.sort_all_movies_by_release_date_ascending
@@ -279,7 +293,7 @@ SPEC
 
         sut, movie_list = build.library(original_movies)
 
-        results = sut.all.filter_using(compound_comparison)
+        results = sut.all.sort_using(compound_comparison)
 
         results.prove { eql? [your_mine_and_ours, theres_something_about_mary, a_bugs_life, cars, shrek, 
           indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean] }

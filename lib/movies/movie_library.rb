@@ -17,7 +17,8 @@ module Movies
 
     #new methods
     
-    def sort_using(arg)
+    def sort_using(comparer)
+      movies.sort {|a,b| comparer.compare(a,b)}
     end
     
     def filter_using(arg)
