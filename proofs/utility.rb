@@ -29,3 +29,13 @@ module ::Enumerable
     include SetMembership
   end
 end
+
+
+class Movies::MovieLibrary
+  module Proof
+    def to_a
+      movies.dup
+    end
+    include SetMembership
+  end
+end

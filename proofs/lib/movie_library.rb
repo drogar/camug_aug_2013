@@ -159,7 +159,8 @@ heading 'General Movie Functionality' do
       :rating => 10
     })
 
-    original_movies = [indiana_jones_and_the_temple_of_doom, cars,a_bugs_life,theres_something_about_mary,pirates_of_the_carribean,your_mine_and_ours,shrek]
+    original_movies = [indiana_jones_and_the_temple_of_doom, cars,a_bugs_life,theres_something_about_mary,
+        pirates_of_the_carribean,your_mine_and_ours,shrek]
 
     heading 'Searching for movies' do
       proof 'Can find all pixar movies' do
@@ -214,32 +215,39 @@ heading 'General Movie Functionality' do
 
         results = sut.all.sort_using(comparer)
 
-        results.prove { eql? [theres_something_about_mary, your_mine_and_ours, shrek, pirates_of_the_carribean, indiana_jones_and_the_temple_of_doom, cars, a_bugs_life] }
+        results.prove { eql? [theres_something_about_mary, your_mine_and_ours, shrek, pirates_of_the_carribean, 
+            indiana_jones_and_the_temple_of_doom, cars, a_bugs_life] }
       end
 
       proof 'Sorts all movies by ascending title' do
+        sut, movie_list = build.library(original_movies)
         comparer = Compare.by.key(:title)
 
         results = sut.all.sort_using(comparer)
 
 
-        results.prove { eql? [a_bugs_life, cars, indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean, shrek, your_mine_and_ours, theres_something_about_mary] }
+        results.prove { eql? [a_bugs_life, cars, indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean, shrek, 
+          your_mine_and_ours, theres_something_about_mary] }
       end
 
       proof 'Sorts all movies by descending release date' do
         sut, movie_list = build.library(original_movies)
+        comparer = Compare.by_descending.key(:release_date)
+        results = sut.all.sort_using(comparer)
 
-        results = sut.sort_all_movies_by_release_date_descending
-
-        results.prove { eql? [theres_something_about_mary, shrek, your_mine_and_ours, cars, pirates_of_the_carribean, a_bugs_life, indiana_jones_and_the_temple_of_doom] }
+        results.prove { eql? [theres_something_about_mary, shrek, your_mine_and_ours, cars, pirates_of_the_carribean, 
+          a_bugs_life, indiana_jones_and_the_temple_of_doom] }
       end
 
       proof 'Sorts all movies by ascending release date' do
         sut, movie_list = build.library(original_movies)
+        comparer = Compare.by_descending.key(:release_date)
 
-        results = sut.sort_all_movies_by_release_date_ascending
+        results = sut.all().sort_using(comparer)
+        #results = sut.sort_all_movies_by_release_date_ascending
 
-        results.prove { eql? [indiana_jones_and_the_temple_of_doom, a_bugs_life, pirates_of_the_carribean, cars, your_mine_and_ours, shrek, theres_something_about_mary] }
+        results.prove { eql? [indiana_jones_and_the_temple_of_doom, a_bugs_life, pirates_of_the_carribean, cars, 
+          your_mine_and_ours, shrek, theres_something_about_mary] }
       end
 
       proof 'Sorts all movies by preferred studios and release date ascending' do
@@ -260,10 +268,10 @@ SPEC
         
         compound_comparison = Compare.by.key(:studio,
                                          Movies::Studios::MGM,
-                                         Movies::Studios::MGM,
-                                         Movies::Studios::MGM,
-                                         Movies::Studios::MGM,
-                                         Movies::Studios::MGM,
+                                         Movies::Studios::PIXAR,
+                                         Movies::Studios::DREAMWORKS,
+                                         Movies::Studios::UNIVERSAL,
+                                         Movies::Studios::DISNEY,
                                         ).then.by.map do |movie|
           movie.release_date
         end
@@ -273,7 +281,8 @@ SPEC
 
         results = sut.all.filter_using(compound_comparison)
 
-        results.prove { eql? [your_mine_and_ours, theres_something_about_mary, a_bugs_life, cars, shrek, indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean] }
+        results.prove { eql? [your_mine_and_ours, theres_something_about_mary, a_bugs_life, cars, shrek, 
+          indiana_jones_and_the_temple_of_doom, pirates_of_the_carribean] }
       end
     end
   end

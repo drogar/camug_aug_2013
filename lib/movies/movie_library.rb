@@ -10,10 +10,19 @@ module Movies
     def add(movie)
       movies.push(movie) unless movies.include? movie
     end
-
+    # changes
     def all
-      movies.dup
+      Movies::MovieLibrary.new(movies.dup)
     end
+
+    #new methods
+    
+    def sort_using(arg)
+    end
+    
+    def filter_using(arg)
+    end
+    
 
     def each(&block)
       movies.each(&block)
